@@ -1,0 +1,22 @@
+version: '3'
+services:
+  python-server:
+    container_name: python-server
+    restart: always
+    build: ./server
+    volumes:
+       - ./server:/usr/src/app/server
+    ports:
+      - "5080:5080"
+  vue-ux:
+    container_name: vue-ux
+    build: ./ux
+    depends_on:
+      - python-server
+    volumes:
+       - ./ux:/usr/src/app/ux
+       - /usr/src/app/ux/node_modules
+    ports:
+      - "6080:6080"
+    environment:
+      - CHOKIDAR_USEPOLLING=true 
