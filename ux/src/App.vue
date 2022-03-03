@@ -1,37 +1,47 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
+    <v-app-bar
+      app
+      background-color="primary"
+      dark
+      grow
+      clipped-left
+      style="z-index: 100"
+    >
+      <v-app-bar-nav-icon @click="drawer = !drawer">
+        <v-icon :style="drawer ? 'transform: rotate(180deg)' : ''">{{
+          drawer ? "fa-xmark" : "fa-bars"
+        }}</v-icon>
+      </v-app-bar-nav-icon>
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Releases</span>
-        <v-icon>fas fa-external-link-alt</v-icon>
-      </v-btn>
+      <v-spacer></v-spacer>
     </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" app clipped>
+      <v-list-items>
+        <v-list-item
+          :style="
+            isMobile && item.title === 'Início'
+              ? 'margin-top: 60px'
+              : 'margin-top: 5px'
+          "
+          v-for="item in items"
+          :key="item.title"
+          :to="item.route"
+          @click="drawer = !drawer"
+        >
+          <v-list-item-icon>
+            <v-icon>
+              {{ item.icon }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>
+            {{ item.title }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-items>
+    </v-navigation-drawer>
 
     <v-main>
       <router-view />
@@ -45,8 +55,35 @@ import Vue from "vue";
 export default Vue.extend({
   name: "App",
 
-  data: () => ({
-    //
-  }),
+  data() {
+    return {
+      drawer: false,
+      items: [
+        {
+          title: "Início",
+          icon: "fa-home",
+          route: "/",
+        },
+        {
+          title: "Quarto Xande",
+          icon: "fa-meteor",
+          route: "/room/xande",
+        },
+        {
+          title: "Quarto Gi",
+          icon: "fa-cat",
+          route: "/room/gi",
+        },
+      ],
+    };
+  },
+
+  computed: {
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    },
+  },
 });
 </script>
